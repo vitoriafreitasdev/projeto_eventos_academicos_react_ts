@@ -1,3 +1,4 @@
+
 import { configureStore } from "@reduxjs/toolkit";
 import eventSlice from "../redux/slice/eventSlice"
 
