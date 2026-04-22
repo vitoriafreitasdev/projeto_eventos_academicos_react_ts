@@ -2,6 +2,7 @@
 .navbar {
     background-color: rgb(65, 105, 225);
     padding: 0.5rem;
+    width: 100%;
 }
 .container_link{
     display: flex;
@@ -22,3 +23,14 @@
     background-color: #ffffffbe;
     color: #202020;
 }
+@media (max-width: 1230px) {
+    .navbar{
+        font-size: 0.9rem;
+    }
+} 
+@media (max-width: 950px) {
+    .container_link{
+        justify-content: flex-start;
+        gap: 3rem;
+    }
+} 

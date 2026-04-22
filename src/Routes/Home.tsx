@@ -6,6 +6,7 @@ const Home = () => {
     
   const events = Events()
 
+  if(!events) return <div className={classes.home}><p>Carregando...</p></div>
 
   return (
     <div className={classes.home}>

@@ -2,8 +2,9 @@
     color: #fff;
     text-align: center;
     padding: 1rem;
+    background-color: rgb(32, 32, 32);
+    height: 100vh;
 }
-
 .events_container{
     color: #303030;
     display: flex;
@@ -11,16 +12,14 @@
     justify-content: center;
     padding: 1rem;
 }
-
 .event{
-    background-color: #fff;
+    background-color: #ffffffea;
     margin: 1rem;
     padding: 1rem;
     width: 30%;
-    height: 160px;
+    height: 40%;
     border-radius: 0.3rem;
 }
-
 .event button{
     margin: 0.3rem;
     padding: 0.3rem;
@@ -29,11 +28,34 @@
     border-radius: 5px;
     color: #fff;
 }
-
 .btn_inscrever{
     background-color: rgb(0, 151, 0);
 }
-
 .btn_comentarios{
     background-color: rgb(65, 105, 225);
+}
+
+@media (max-width: 1024px) {
+  .home{
+    height: 100%;
+  }
+} 
+@media (max-width: 830px) {
+    .events_container{
+        flex-direction: column;
+        align-items: center;
+    }
+    .event{
+        width: 50%;
+    }
+}
+@media (max-width: 630px) {
+    .event{
+        width: 65%;
+    }
+}
+@media (max-width: 415px) {
+    .event{
+        width: 85%;
+    }
 }
