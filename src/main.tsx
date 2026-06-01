@@ -9,6 +9,7 @@ import App from './App.tsx'
 import Home from './Routes/Home.tsx'
 import Login from './Routes/Login.tsx'
 import Cadastro from './Routes/Cadastro.tsx'
+import UserPage from './Routes/UserPage.tsx'
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
       {
         path: "/cadastro",
         element: <Cadastro/>
+      },
+      {
+        path: "/user/:id/:token",
+        element: <UserPage/>
       }
     ]
   }

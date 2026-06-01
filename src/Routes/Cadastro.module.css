@@ -1,0 +1,31 @@
+.cadastro_container{
+    height: 100vh;
+    color: #fff;
+    text-align: center;
+}
+.cadastro_container h2{
+    margin-top: 3rem;
+}
+.cadastro_container form{
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    grid: auto-flow dense / 25%;
+    margin: 1rem;
+}
+.cadastro_container form label{
+    padding: 0.5rem 0;
+}
+.cadastro_container form input{
+    padding: 0.2rem;
+}
+.cadastro_container form button{
+    width: 50%;
+    margin: 1.5rem auto;
+    padding: 0.2rem;
+    cursor: pointer;
+    background-color:  rgb(32, 32, 32);
+    color: #fff;
+    border: 2px solid #fff;
+    border-radius: 1rem;
+}

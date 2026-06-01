@@ -34,6 +34,7 @@ vi.mock('../fetch_config/get_fetch', () => ({
   default: vi.fn()
 }))
 
+
 const wrapper = ({ children }: { children: ReactNode }) => (
   <Provider store={store}>
     {children}
@@ -55,4 +56,6 @@ describe("Testing the mock API calls ", () => {
       }).then((data) => expect(data.length).toBeGreaterThan(0))
         
     })
+
+    
 })

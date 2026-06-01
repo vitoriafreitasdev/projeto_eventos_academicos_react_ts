@@ -9,8 +9,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #fff;
-    color: black;
+    color: #fff;
     width: 60%;
     margin: 1rem auto;
     padding: 0.5rem;
@@ -30,7 +29,9 @@
     padding: 0.4rem;
     border-radius: 15px;
     cursor: pointer;
-    background-color: rgb(26, 58, 153);
+    background-color: rgb(32, 32, 32);
+    border: 2px solid #fff;
+
     color: #fff;
 }
 @media (max-width: 400px){

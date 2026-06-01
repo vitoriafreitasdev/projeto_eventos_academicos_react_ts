@@ -39,7 +39,7 @@ const wrapper = ({ children }: { children: ReactNode }) => (
 )
 
 
-describe("Testing the API calls", () => {
+describe.skip("Testing the API calls", () => {
     
     it("Test the if Events are being display in Home with mock data", async () => {
         

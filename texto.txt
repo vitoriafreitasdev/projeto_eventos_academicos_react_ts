@@ -1,0 +1,3 @@
+-testei LoginHook com o data mocked, testar com a api real
+-fazer um createAsyncThunk para:
+    -pegar o id do usuário passar pra api e pegar os dados dele
