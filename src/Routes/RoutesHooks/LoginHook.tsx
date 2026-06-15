@@ -6,7 +6,7 @@ import {LoginUser} from "../../redux/slice/eventSlice"
 const LoginHook = () => {
     
     const dispatch = useDispatch<AppDispatch>()
-    const userLogged = useSelector((state: RootState) => state.event.user)
+    const userLogged = useSelector((state: RootState) => state.event.loginReturn)
 
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -23,7 +23,7 @@ const LoginHook = () => {
     }
 
     if(userLogged) {
-        navigate(`/user/${userLogged.id}/${userLogged.token}`)
+        navigate(`/user/${userLogged.id}`)
     }
     
     return {

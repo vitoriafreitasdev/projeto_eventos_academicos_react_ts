@@ -1,3 +1,23 @@
 -testei LoginHook com o data mocked, testar com a api real
 -fazer um createAsyncThunk para:
     -pegar o id do usuário passar pra api e pegar os dados dele
+
+
+--
+const token = "your_encoded_jwt_token_here";
+
+fetch("https://example.com", {
+  method: "GET", // or 'POST', 'PUT', 'DELETE'
+  headers: {
+    "Authorization": `Bearer ${token}`,
+    "Content-Type": "application/json"
+  }
+})
+.then(response => {
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+  return response.json();
+})
+.then(data => console.log(data))
+.catch(error => console.error("Fetch error:", error));

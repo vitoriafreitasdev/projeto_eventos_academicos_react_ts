@@ -1,8 +1,8 @@
 import UserPageHook from "./RoutesHooks/UserPageHook";
 
 const UserPage = () => {
-  const postId = UserPageHook()
-  console.log(postId)
+  const user = UserPageHook()
+  console.log(user)
   return (
     <div>UserPage</div>
   )

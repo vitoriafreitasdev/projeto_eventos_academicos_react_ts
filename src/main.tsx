@@ -29,7 +29,7 @@ const router = createBrowserRouter([
         element: <Cadastro/>
       },
       {
-        path: "/user/:id/:token",
+        path: "/user/:id",
         element: <UserPage/>
       }
     ]
