@@ -11,7 +11,7 @@ async function  get_user(url:string, token: string) {
         const data = await res.json()
         return data 
     } catch (error) {
-        throw new Error(" " + error)
+        throw new Error("get user: " + error)
     }
     
 }

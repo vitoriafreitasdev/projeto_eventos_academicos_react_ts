@@ -6,11 +6,14 @@ import {userData} from "../../redux/slice/eventSlice";
 import { useEffect } from "react";
 
 const UserPageHook = () => {
+
+    let message: string | null = null
+
     const dispatch = useDispatch<AppDispatch>();
     const data = useSelector((state: RootState) => state.event.loginReturn)
     const user = useSelector((state: RootState) => state.event.user)
 
-    const params = useParams();
+    const params = useParams()
 
     const callUserData = async () => {
         if(data?.token && params.id) {
@@ -22,7 +25,13 @@ const UserPageHook = () => {
         callUserData()
     }, [data?.token, params.id])
 
-    return user
+    
+    if(!data?.token) {
+            message = "Você foi desconectado. Por favor, faça login."
+    }
+    
+    
+    return {user, message}
 
 }
 

@@ -6,7 +6,6 @@ import get_fetch from "../../fetch_config/get_fetch";
 import post_fetch from "../../fetch_config/post_fetch";
 import get_user from "../../fetch_config/get_user";
 
-import type { SerializedError } from "@reduxjs/toolkit";
 
 //import {events, user} from "../../mocked_data/data.ts"
 
@@ -29,18 +28,17 @@ interface loginRes{
 }
 
 interface user{
-    id: number,
     name: string,
     age: number,
     email: string,
-    token: string
+    events: Array<Event>
 }
 export interface InicialState {
     loading: boolean;
     events: Array<Event> | null;
     loginReturn: loginRes | null;
     user: user | null
-    errorLogin: SerializedError | null
+    errorLogin: string | undefined | null;
     number: number;
 }
 
@@ -71,7 +69,7 @@ export const LoginUser = createAsyncThunk("LoginUser", async (userLogin: UserLog
         return res
     }catch (error)
     {
-        throw new Error("Erro: " + error)
+        throw new Error(" " + error)
     }
 })
 
@@ -118,7 +116,9 @@ const eventSlice = createSlice({
             state.loginReturn = action.payload
         })
         builder.addCase(LoginUser.rejected, (state, action) => {
-            state.errorLogin = action.error
+            const error = action.error.message
+            const answerError = error?.split(/[""]/)
+            if(answerError != undefined) state.errorLogin = answerError[1]
         })
 
         builder.addCase(userData.pending, (state) => {
@@ -128,9 +128,7 @@ const eventSlice = createSlice({
             state.loading = false
             state.user = action.payload
         })
-        builder.addCase(userData.rejected, (state, action) => {
-            state.errorLogin = action.error
-        })
+        
     }
 
 })

@@ -7,6 +7,7 @@ const LoginHook = () => {
     
     const dispatch = useDispatch<AppDispatch>()
     const userLogged = useSelector((state: RootState) => state.event.loginReturn)
+    const error = useSelector((state: RootState) => state.event.errorLogin)
 
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -32,7 +33,8 @@ const LoginHook = () => {
         password,
         setPassword,
         logUser,
-        userLogged
+        userLogged,
+        error
     }
 }
 
