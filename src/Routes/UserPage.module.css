@@ -1,5 +1,11 @@
-.userMainContainer{
+.userMessage{
     height: 100vh;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+}
+.userMainContainer{
+    height: 100%;
     color: #fff;
     display: flex;
     justify-content: center;
@@ -63,4 +69,23 @@
 .delete{
     background-color: rgb(128, 0, 0);
 
+}
+.formAddEvent{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1rem;
+}
+.formAddEvent input{
+    width: 50%;
+    margin: 0.5rem;
+    padding: 0.15rem;
+}
+.formAddEvent button{
+    padding: 0.4rem;
+    width: 10%;
+    border: none;
+    background-color: rgb(10, 138, 10);
+    color: #fff;
+    cursor: pointer;
 }

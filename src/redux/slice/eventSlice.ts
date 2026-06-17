@@ -5,41 +5,21 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import get_fetch from "../../fetch_config/get_fetch";
 import post_fetch from "../../fetch_config/post_fetch";
 import get_user from "../../fetch_config/get_user";
-
+import post_event from "../../fetch_config/post_event";
+import { type Event, type EventToAdd, type UserLogin, type loginRes, type user, type deleteEvent} from "../../interfaces/interface";
+import delete_event from "../../fetch_config/delete_event";
 
 //import {events, user} from "../../mocked_data/data.ts"
 
-interface Event {
-    id: number;
-    title: string;
-    description: string;
-    date: string;
-    user_Id: number;
-}
 
-export interface UserLogin {
-    email: string,
-    password: string
-}
-// mudar na api a resposta do login e do user
-interface loginRes{
-    id: number,
-    token: string
-}
-
-interface user{
-    name: string,
-    age: number,
-    email: string,
-    events: Array<Event>
-}
-export interface InicialState {
+interface InicialState {
     loading: boolean;
     events: Array<Event> | null;
     loginReturn: loginRes | null;
     user: user | null
-    errorLogin: string | undefined | null;
-    number: number;
+    error: string | undefined | null;
+    eventToAdd: EventToAdd | null;
+    eventDeleteId: number | null
 }
 
 export const initialState: InicialState = {
@@ -47,12 +27,13 @@ export const initialState: InicialState = {
     events: null,
     loginReturn: null,
     user: null,
-    errorLogin: null,
-    number: 0
+    error: null,
+    eventToAdd: null,
+    eventDeleteId: null
 }
 
 // asyncs thunks 
-
+//carregar os eventos
 export const CallEvents = createAsyncThunk("CallEvents", async () => {
     try {
         const res = await get_fetch("Events/getEvents")
@@ -62,7 +43,7 @@ export const CallEvents = createAsyncThunk("CallEvents", async () => {
         
     }
 })
-
+//logar o usuário
 export const LoginUser = createAsyncThunk("LoginUser", async (userLogin: UserLogin) => {
     try{
         const res = await post_fetch("Users/Login", userLogin)
@@ -72,7 +53,7 @@ export const LoginUser = createAsyncThunk("LoginUser", async (userLogin: UserLog
         throw new Error(" " + error)
     }
 })
-
+//carregar os dados do usuário
 export const userData = createAsyncThunk("userData", async (data: { id: string, token: string }) => {
     try{
         if(data.id && data.token) {
@@ -81,17 +62,36 @@ export const userData = createAsyncThunk("userData", async (data: { id: string, 
         }
 
         return null
-} catch (error) {
-    throw new Error("Erro no userData thunk: " + error)
-}
+    } catch (error) {
+        throw new Error("Erro no userData thunk: " + error)
+    }
+})
+//deletar evento
+export const addEvent = createAsyncThunk("addEvent", async (event: EventToAdd) => {
+    try {
+        const res = await post_event("Events/AddEvent", event)
+        return res
+    } catch (error) {
+        throw new Error("" + error)
+    }
+})
+
+
+export const delEvent = createAsyncThunk("delEvent", async (delItem: deleteEvent) => {
+    try {
+        const res = await delete_event("Events/DeleteEvent", delItem)
+        return res
+    } catch (error) {
+        throw new Error(" " + error)
+    }
 })
 
 const eventSlice = createSlice({
     name: "eventSlice",
     initialState: initialState,
     reducers: {
-        addNumber: (state, action) => {
-            state.number += action.payload
+        addEventIdDeleted: (state, action) => {
+            state.eventDeleteId = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -112,25 +112,51 @@ const eventSlice = createSlice({
             state.loading = true 
         })
         builder.addCase(LoginUser.fulfilled, (state, action) => {
-            state.loading = false
             state.loginReturn = action.payload
+            state.loading = false
         })
         builder.addCase(LoginUser.rejected, (state, action) => {
             const error = action.error.message
             const answerError = error?.split(/[""]/)
-            if(answerError != undefined) state.errorLogin = answerError[1]
+            if(answerError != undefined) state.error = answerError[1]
+            state.loading = false
         })
 
         builder.addCase(userData.pending, (state) => {
             state.loading = true 
         })
         builder.addCase(userData.fulfilled, (state, action) => {
-            state.loading = false
             state.user = action.payload
+            state.loading = false
         })
-        
+
+        builder.addCase(addEvent.pending, (state) => {
+            state.loading = true 
+        })
+        builder.addCase(addEvent.fulfilled, (state, action) => {
+            state.loading = false
+            state.user?.events?.push(action.payload)
+        })
+        builder.addCase(addEvent.rejected, (state, action) => {
+            const error = action.error.message
+            const answerError = error?.split(/[""]/)
+            if(answerError != undefined) state.error = answerError[1]
+            state.loading = false
+        })
+
+        builder.addCase(delEvent.fulfilled, (state, action) => {
+            if(action.payload == true && state.user){
+                const filter = state.user?.events?.filter((eventUser) => eventUser.id != state.eventDeleteId)
+                state.user.events = filter
+            }
+        })
+        builder.addCase(delEvent.rejected, (state, action) => {
+            const error = action.error.message
+            const answerError = error?.split(/[""]/)
+            if(answerError != undefined) state.error = answerError[1]
+        })
     }
 
 })
-export const {addNumber} = eventSlice.actions
+export const {addEventIdDeleted} = eventSlice.actions
 export default eventSlice.reducer

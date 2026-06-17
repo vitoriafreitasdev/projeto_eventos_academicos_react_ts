@@ -1,14 +1,14 @@
-import { type UserLogin } from "../interfaces/interface"
+import { type deleteEvent } from "../interfaces/interface"
 const base_url = "https://localhost:7120/api/"
-async function  post_fetch(url:string, user: UserLogin) {
+async function  delete_event(url:string, content: deleteEvent) {
     try {
         const res = await fetch(base_url + url, {
-            method: 'POST',
+            method: 'DELETE',
             headers: 
             {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(user)
+            body: JSON.stringify(content)
         })
         const data = await res.json()
         return data 
@@ -18,4 +18,4 @@ async function  post_fetch(url:string, user: UserLogin) {
 
 }
 
-export default post_fetch
+export default delete_event

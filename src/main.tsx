@@ -10,6 +10,7 @@ import Home from './Routes/Home.tsx'
 import Login from './Routes/Login.tsx'
 import Cadastro from './Routes/Cadastro.tsx'
 import UserPage from './Routes/UserPage.tsx'
+import EditEvent from './Routes/EditEvent.tsx'
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "/user/:id",
         element: <UserPage/>
+      },
+      {
+        path: "/user/:userid/:eventid",
+        element: <EditEvent/>
       }
     ]
   }
