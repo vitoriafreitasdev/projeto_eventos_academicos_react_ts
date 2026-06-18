@@ -8,11 +8,15 @@ export interface Event {
 }
 
 export interface EventEdit {
-    title: string;
-    description: string;
-    date: string;
-    key: string;
-    user_Id: number;
+    content: {
+        id: number;
+        title: string;
+        description: string;
+        date: string;
+        key: string;
+        user_Id: number;
+    }
+    token: string;
 }
 
 export interface EventToAdd{

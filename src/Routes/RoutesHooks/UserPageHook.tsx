@@ -1,11 +1,15 @@
 
-import {useParams} from "react-router";
-import {useSelector, useDispatch} from "react-redux";
-import { type RootState, type AppDispatch} from "../../redux/store";
-import {userData, addEvent, delEvent, addEventIdDeleted} from "../../redux/slice/eventSlice";
-import { useEffect, useState } from "react";
-import {type EventToAdd, type deleteEvent} from "../../interfaces/interface";
 import {useNavigate} from "react-router-dom"
+import {useParams} from "react-router";
+
+import { useEffect, useState } from "react";
+
+import {useSelector, useDispatch} from "react-redux";
+
+import {type EventToAdd, type deleteEvent} from "../../interfaces/interface";
+import { type RootState, type AppDispatch} from "../../redux/store";
+
+import {userData, addEvent, delEvent, addEventIdDeleted, resetErrorState} from "../../redux/slice/eventSlice";
 
 const UserPageHook = () => {
     const params = useParams()
@@ -36,6 +40,10 @@ const UserPageHook = () => {
             key: key
         }
         await dispatch(addEvent(newEvent))
+        
+        setTimeout(() => {
+            dispatch(resetErrorState())
+        }, 1250)
     }
 
     const deleteUserEvent = async (idEvent: number) => {
@@ -58,6 +66,8 @@ const UserPageHook = () => {
                 await dispatch(userData({id: params.id, token: data.token}))
             }
         }
+        dispatch(resetErrorState())
+
         callUserData()
     }, [])
     
