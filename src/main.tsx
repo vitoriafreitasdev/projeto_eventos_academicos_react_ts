@@ -11,6 +11,7 @@ import Login from './Routes/Login.tsx'
 import Cadastro from './Routes/Cadastro.tsx'
 import UserPage from './Routes/UserPage.tsx'
 import EditEvent from './Routes/EditEvent.tsx'
+import EmitirCertificado from './Routes/EmitirCertificado.tsx'
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: "/user/:userid/:eventid",
         element: <EditEvent/>
+      },
+      {
+        path: "/emitircertificado",
+        element: <EmitirCertificado/>
       }
     ]
   }

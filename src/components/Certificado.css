@@ -1,0 +1,15 @@
+
+.certificadoCont div{
+    background: linear-gradient(rgb(103, 1, 199), rgb(75, 18, 128), rgb(22, 12, 31)); 
+    display: block;
+    height: 40vh;
+    width: 60vh;
+    margin: 2rem;
+}
+.certificadoCont h2, p{
+    color: aliceblue;
+    margin: 0.8rem;
+}
+.certificadoCont button{
+    margin-bottom: 3rem;
+}

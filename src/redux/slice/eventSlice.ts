@@ -8,35 +8,15 @@ import get_user from "../../fetch_config/get_user";
 import post_event from "../../fetch_config/post_event";
 import put_event from "../../fetch_config/put_event";
 
-import { type Event, type EventToAdd, type UserLogin, type loginRes, type user, type deleteEvent, type EventEdit} from "../../interfaces/interface";
+import { type Event, type EventToAdd, type UserLogin, type loginRes, type user, type deleteEvent, type EventEdit,  type certificadoData, type certificado, type registerEventData} from "../../interfaces/interface";
 import delete_event from "../../fetch_config/delete_event";
+import certificado_data from "../../fetch_config/certificado_data";
+import registered_event from "../../fetch_config/registered_event";
 
 //import {events, user} from "../../mocked_data/data.ts"
 
 
-interface InicialState {
-    loading: boolean;
-    events: Array<Event> | null;
-    loginReturn: loginRes | null;
-    user: user | null
-    error: string | undefined | null;
-    errorEdit: string | undefined | null;
-    eventToAdd: EventToAdd | null;
-    eventDeleteId: number | null;
-    editMessage: string | null;
-}
 
-export const initialState: InicialState = {
-    loading: false,
-    events: null,
-    loginReturn: null,
-    user: null,
-    error: null,
-    errorEdit: null,
-    eventToAdd: null,
-    eventDeleteId: null,
-    editMessage: null
-}
 
 // asyncs thunks 
 //carregar os eventos
@@ -81,7 +61,6 @@ export const addEvent = createAsyncThunk("addEvent", async (event: EventToAdd) =
         throw new Error("" + error)
     }
 })
-
 //deletar evento
 export const delEvent = createAsyncThunk("delEvent", async (delItem: deleteEvent) => {
     try {
@@ -91,7 +70,7 @@ export const delEvent = createAsyncThunk("delEvent", async (delItem: deleteEvent
         throw new Error(" " + error)
     }
 })
-
+//editar evento
 export const editEvent = createAsyncThunk("editEvent", async (data: EventEdit) => {
     try {
         const res = await put_event("Events/EditEvent", data.content, data.token)
@@ -100,6 +79,52 @@ export const editEvent = createAsyncThunk("editEvent", async (data: EventEdit) =
         throw new Error(" " + error)
     }
 })
+//dados para o certificado
+export const certifcadoEmissao = createAsyncThunk("certificadoEmissao", async (data: certificadoData) => {
+    try {
+        const res = await certificado_data("Events/GetCertificateData", data)
+        return res
+    } catch (error) {
+        throw new Error(" " + error)
+    }
+})
+//se inscrever no evento
+export const registerToEvent = createAsyncThunk("registerToEvent", async (data: registerEventData) => {
+    try {
+        const res = await registered_event("Site/registerToEvent", data)
+        return res
+    } catch (error) {
+        throw new Error(" " + error)
+    }
+})
+
+interface InicialState {
+    loading: boolean;
+    events: Array<Event> | null;
+    loginReturn: loginRes | null;
+    user: user | null
+    error: string | undefined | null;
+    errorEdit: string | undefined | null;
+    eventToAdd: EventToAdd | null;
+    eventDeleteId: number | null;
+    editMessage: string | null;
+    registerEventMsg: string | null;
+    certificado: certificado | null;
+}
+
+export const initialState: InicialState = {
+    loading: false,
+    events: null,
+    loginReturn: null,
+    user: null,
+    error: null,
+    errorEdit: null,
+    eventToAdd: null,
+    eventDeleteId: null,
+    editMessage: null,
+    registerEventMsg: null,
+    certificado: null
+}
 
 const eventSlice = createSlice({
     name: "eventSlice",
@@ -116,6 +141,7 @@ const eventSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
+        //Dados dos eventos
         builder.addCase(CallEvents.pending, (state) => {
             state.loading = true
         })
@@ -128,7 +154,7 @@ const eventSlice = createSlice({
             state.events = null 
             console.log("Error no builder: ", action.error)
         })
-
+        //Login do usuário
         builder.addCase(LoginUser.pending, (state) => {
             state.loading = true 
         })
@@ -142,7 +168,7 @@ const eventSlice = createSlice({
             if(answerError != undefined) state.error = answerError[1]
             state.loading = false
         })
-
+        //Dados do usuário
         builder.addCase(userData.pending, (state) => {
             state.loading = true 
         })
@@ -150,7 +176,7 @@ const eventSlice = createSlice({
             state.user = action.payload
             state.loading = false
         })
-
+        //Adicionar eventos
         builder.addCase(addEvent.pending, (state) => {
             state.loading = true 
         })
@@ -164,7 +190,7 @@ const eventSlice = createSlice({
             if(answerError != undefined) state.error = answerError[1]
             state.loading = false
         })
-
+        //Deletar eventos
         builder.addCase(delEvent.pending, (state) => {
             state.loading = true 
         })
@@ -181,8 +207,7 @@ const eventSlice = createSlice({
             if(answerError != undefined) state.error = answerError[1]
             state.loading = false    
         })
-      
-        
+        //Editar eventos       
         builder.addCase(editEvent.fulfilled, (state) => {
             state.editMessage = "Editado com sucesso."
             state.errorEdit = null
@@ -191,6 +216,34 @@ const eventSlice = createSlice({
             const error = action.error.message
             const answerError = error?.split(/[""]/)
             if(answerError != undefined) state.errorEdit = answerError[1]
+        })
+        //Certificado
+        builder.addCase(certifcadoEmissao.pending, (state) => {
+            state.loading = true
+        })
+        builder.addCase(certifcadoEmissao.fulfilled, (state, action) => {
+            state.certificado = action.payload
+            state.loading = false
+        })
+        builder.addCase(certifcadoEmissao.rejected, (state, action) => {
+            const error = action.error.message
+            const answerError = error?.split(/[""]/)
+            if(answerError != undefined) state.error = answerError[1]
+            state.loading = false    
+        })
+        //Inscrição no evento
+         builder.addCase(registerToEvent.pending, (state) => {
+            state.registerEventMsg = null;
+        })
+        builder.addCase(registerToEvent.fulfilled, (state, action) => {
+            if(action.payload == true){
+                state.registerEventMsg = "Registrado ao evento com sucesso."
+            }
+        })
+        builder.addCase(registerToEvent.rejected, (state, action) => {
+            const error = action.error.message
+            const answerError = error?.split(/[""]/)
+            if(answerError != undefined) state.error = answerError[1]
         })
     }
 

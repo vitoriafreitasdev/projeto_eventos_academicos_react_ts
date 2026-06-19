@@ -1,0 +1,37 @@
+.containerPrincipal{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+.containerPrincipal div{
+    color: #fff;
+    width: 50%;
+    height: 30%;
+    margin-top: 2.8rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.containerPrincipal form{
+    display: flex;
+    flex-direction: column;
+    margin: 0.5rem;
+    text-align: center;
+}
+.containerPrincipal input{
+    margin: 5px;
+    width: 250px;
+}
+.containerPrincipal button{
+    width: 25%;
+    border: none;
+    padding: 0.4rem;
+    border-radius: 15px;
+    cursor: pointer;
+    background-color: rgb(32, 32, 32);
+    border: 2px solid #fff;
+    color: #fff;
+    margin-bottom: 4.5rem;
+}

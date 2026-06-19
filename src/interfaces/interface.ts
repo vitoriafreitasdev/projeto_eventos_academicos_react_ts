@@ -48,3 +48,20 @@ export interface deleteEvent {
     eventId: number,
     userId: number 
 }
+
+export interface certificadoData{
+    email: string;
+    key: string
+}
+
+export interface certificado {
+    eventTitle: string;
+    userName: string ;
+    description: string ;
+    date: string;
+}
+
+export interface registerEventData{
+    eventId: number;
+    userId: number;
+}
