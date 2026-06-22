@@ -1,16 +1,20 @@
+import Comments from '../components/Comments'
 import classes from './Home.module.css'
 import Events from "./RoutesHooks/Events"
 
 
+
 const Home = () => {
     
-  const {events, messageToUser, registerInEvent} = Events()
-  console.log(messageToUser)
+  const {events, messageToUser, registerInEvent, error, registerEventMsg, showComment, idEvent, showCommentComponent} = Events()
+  
   if(!events) return <div className={classes.home}><p>Carregando...</p></div>
 
   return (
     <div className={classes.home}>
       <h1>Eventos registrados na nossa comunidade:</h1>
+      {registerEventMsg && <p>{registerEventMsg}</p>}
+      {error && <p>{error}</p>}
       {messageToUser && <p>{messageToUser}</p>}
        <div className={classes.events_container}>
          {events && events.map((event) => (
@@ -19,10 +23,12 @@ const Home = () => {
                 <p>{event.description}</p>
                 <p>{new Date(event.date).toLocaleDateString('pt-BR')}</p>
                 <button className={classes.btn_inscrever} onClick={() => registerInEvent(event.id)}>Se inscrever</button>
-                <button className={classes.btn_comentarios}>Abrir comentários</button>
+                <button className={classes.btn_comentarios} onClick={() => showCommentComponent(!showComment, event.id)}>Abrir comentários</button>
             </div>
         ))}
        </div>
+      {showComment && <Comments eventId={idEvent}/>}
+
     </div>
   )
 }

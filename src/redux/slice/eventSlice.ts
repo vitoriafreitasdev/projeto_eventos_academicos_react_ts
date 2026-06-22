@@ -8,15 +8,14 @@ import get_user from "../../fetch_config/get_user";
 import post_event from "../../fetch_config/post_event";
 import put_event from "../../fetch_config/put_event";
 
-import { type Event, type EventToAdd, type UserLogin, type loginRes, type user, type deleteEvent, type EventEdit,  type certificadoData, type certificado, type registerEventData} from "../../interfaces/interface";
+import { type Event, type EventToAdd, type UserLogin, type loginRes, type user, type deleteEvent, type EventEdit,  type certificadoData, type certificado, type registerEventData, type commentary, type commentPost, type commentPostRes} from "../../interfaces/interface";
 import delete_event from "../../fetch_config/delete_event";
 import certificado_data from "../../fetch_config/certificado_data";
 import registered_event from "../../fetch_config/registered_event";
+import get_comments from "../../fetch_config/get_comments";
+import post_comment from "../../fetch_config/post_comment";
 
 //import {events, user} from "../../mocked_data/data.ts"
-
-
-
 
 // asyncs thunks 
 //carregar os eventos
@@ -97,6 +96,25 @@ export const registerToEvent = createAsyncThunk("registerToEvent", async (data: 
         throw new Error(" " + error)
     }
 })
+//Comentários
+export const showComments = createAsyncThunk("showComments", async (eventId: number) => {
+    try {
+        const res = await get_comments(`Site/comments/${eventId}`)
+        return res
+    } catch (error) {
+        throw new Error(" " + error)
+    }
+})
+
+//Adicionar comentário
+export const addComments = createAsyncThunk("addComments", async (comment: commentPost) => {
+    try {
+        const res = await post_comment(`Site/addComment`, comment)
+        return res
+    } catch (error) {
+        throw new Error(" " + error)
+    }
+})
 
 interface InicialState {
     loading: boolean;
@@ -110,8 +128,13 @@ interface InicialState {
     editMessage: string | null;
     registerEventMsg: string | null;
     certificado: certificado | null;
-}
+    commentary: Array<commentary> | null;
+    showComment: boolean;
+    lastCommentAdd: commentPostRes | null;
+    errorComment: string | undefined | null;
 
+}
+// add o state dos comentarios aqui
 export const initialState: InicialState = {
     loading: false,
     events: null,
@@ -123,7 +146,11 @@ export const initialState: InicialState = {
     eventDeleteId: null,
     editMessage: null,
     registerEventMsg: null,
-    certificado: null
+    certificado: null,
+    commentary: null,
+    showComment: false,
+    lastCommentAdd: null,
+    errorComment: null
 }
 
 const eventSlice = createSlice({
@@ -135,9 +162,14 @@ const eventSlice = createSlice({
         },
         resetErrorState: (state) => {
             state.error = null
+            state.registerEventMsg = null
+
         },
         resetErrorEditState: (state) => {
             state.errorEdit = null
+        },
+        changeShowCommentState: (state, action) => {
+            state.showComment = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -245,8 +277,43 @@ const eventSlice = createSlice({
             const answerError = error?.split(/[""]/)
             if(answerError != undefined) state.error = answerError[1]
         })
+        //Comentários
+        builder.addCase(showComments.pending, (state) => {
+            state.loading = true 
+        })
+        builder.addCase(showComments.fulfilled, (state, action) => {
+            if(action.payload.length > 0){
+                state.commentary = action.payload
+            } else{
+                state.commentary = null
+            }
+            state.loading = false
+        })
+        builder.addCase(showComments.rejected, (state) => {
+            state.loading = false
+            state.commentary = null
+
+        })
+        //Adicionar comentário
+        builder.addCase(addComments.pending, (state) => {
+            state.loading = true 
+        })
+        
+        builder.addCase(addComments.fulfilled, (state, action) => {
+            if(action.payload != null){
+                state.lastCommentAdd = action.payload
+            }
+            state.loading = false
+        })
+        builder.addCase(addComments.rejected, (state, action) => {
+            state.loading = false
+            state.commentary = null
+            const error = action.error.message
+            const answerError = error?.split(/[""]/)
+            if(answerError != undefined) state.errorComment = answerError[1]
+        })
     }
 
 })
-export const {addEventIdDeleted, resetErrorState, resetErrorEditState} = eventSlice.actions
+export const {addEventIdDeleted, resetErrorState, resetErrorEditState, changeShowCommentState} = eventSlice.actions
 export default eventSlice.reducer

@@ -65,3 +65,28 @@ export interface registerEventData{
     eventId: number;
     userId: number;
 }
+
+export interface commentary{
+    id: number,
+    commentary: string,
+    userName: string
+}
+
+export interface commentPost{
+    eventId: number,
+    userId: number,
+    comment: string
+}
+
+/* retorno {
+  "id": 1018,
+  "commentary": "Daora",
+  "userId": 1015,
+  "eventId": 1
+}*/
+export interface commentPostRes{
+    id: number,
+    commentary: string,
+    userId: number,
+    eventId: number
+}
