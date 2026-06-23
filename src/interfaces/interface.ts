@@ -91,3 +91,24 @@ export interface usersRegistersInEvents{
     age: number,
     email: string
 }
+
+/*{
+  "name": "",
+  "age": 1,
+  "email": "",
+  "password": ""
+} */
+
+export interface registerUser{
+    name: string, 
+    age: number,
+    email: string,
+    password: string
+}
+
+export interface registerReturn{
+    id: number,
+    name: string, 
+    age: number,
+    email: string,
+}

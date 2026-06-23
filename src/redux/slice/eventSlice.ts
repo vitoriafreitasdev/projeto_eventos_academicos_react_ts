@@ -8,11 +8,12 @@ import get_user from "../../fetch_config/get_user";
 import post_event from "../../fetch_config/post_event";
 import put_event from "../../fetch_config/put_event";
 
-import { type Event, type EventToAdd, type UserLogin, type loginRes, type user, type deleteEvent, type EventEdit,  type certificadoData, type certificado, type registerEventData, type commentary, type commentPost, type commentPostRes, type usersRegistersInEvents} from "../../interfaces/interface";
+import { type Event, type EventToAdd, type UserLogin, type loginRes, type user, type deleteEvent, type EventEdit,  type certificadoData, type certificado, type registerEventData, type commentary, type commentPost, type commentPostRes, type usersRegistersInEvents, type registerUser, type registerReturn} from "../../interfaces/interface";
 import delete_event from "../../fetch_config/delete_event";
 import certificado_data from "../../fetch_config/certificado_data";
 import registered_event from "../../fetch_config/registered_event";
 import post_comment from "../../fetch_config/post_comment";
+import post_userReg from "../../fetch_config/post_userReg";
 
 //import {events, user} from "../../mocked_data/data.ts"
 
@@ -122,7 +123,15 @@ export const showRegisterUsers = createAsyncThunk("showRegisterUsers", async (ev
         throw new Error(" " + error)
     }
 })
-
+//Registrar usuário
+export const regUser = createAsyncThunk("regUser", async (user: registerUser) => {
+    try {
+        const res = await post_userReg(`Users/Register`, user)
+        return res
+    } catch (error) {
+        throw new Error(" " + error)
+    }
+})
 interface InicialState {
     loading: boolean;
     events: Array<Event> | null;
@@ -139,7 +148,8 @@ interface InicialState {
     showComment: boolean;
     lastCommentAdd: commentPostRes | null;
     errorComment: string | undefined | null;
-    usersRegistersInEvents: Array<usersRegistersInEvents> | null
+    usersRegistersInEvents: Array<usersRegistersInEvents> | null;
+    registerReturn: registerReturn | null;
 
 }
 // add o state dos comentarios aqui
@@ -159,7 +169,8 @@ export const initialState: InicialState = {
     showComment: false,
     lastCommentAdd: null,
     errorComment: null,
-    usersRegistersInEvents: null
+    usersRegistersInEvents: null,
+    registerReturn: null
 }
 
 const eventSlice = createSlice({
@@ -332,8 +343,23 @@ const eventSlice = createSlice({
         })
         builder.addCase(showRegisterUsers.rejected, (state, action) => {
             state.loading = false
-            state.commentary = null
             state.usersRegistersInEvents = null
+            const error = action.error.message
+            const answerError = error?.split(/[""]/)
+            if(answerError != undefined) state.errorComment = answerError[1]
+        })
+        //registerReturn
+        builder.addCase(regUser.pending, (state) => {
+            state.loading = true 
+            state.registerReturn = null
+        })
+        builder.addCase(regUser.fulfilled, (state, action) => {
+            state.registerReturn = action.payload
+            state.loading = false
+        })
+        builder.addCase(regUser.rejected, (state, action) => {
+            state.loading = false
+            state.registerReturn = null
             const error = action.error.message
             const answerError = error?.split(/[""]/)
             if(answerError != undefined) state.errorComment = answerError[1]

@@ -23,6 +23,7 @@ const UserPageHook = () => {
     const [user_Id] = useState<string | undefined>(params.id)
     const [key, setKey] = useState<string>("")
     const [show, setShow] = useState<boolean>(false)
+    const [callEffect, setCallEffect] = useState<EventToAdd | null>(null)
 
     const dispatch = useDispatch<AppDispatch>();
 
@@ -32,6 +33,16 @@ const UserPageHook = () => {
     const error = useSelector((state: RootState) => state.event.error) 
     const usersRegistersInEvents = useSelector((state: RootState) => state.event.usersRegistersInEvents) 
 
+    useEffect(() => {
+        const callUserData = async () => {
+            if(data?.token && params.id) {
+                await dispatch(userData({id: params.id, token: data.token}))
+            }
+        }
+        dispatch(resetErrorState())
+
+        callUserData()
+    }, [callEffect])
 
     const addEventNew = async (e: { preventDefault: () => void; }) => {
         e.preventDefault()
@@ -46,6 +57,7 @@ const UserPageHook = () => {
         
         setTimeout(() => {
             dispatch(resetErrorState())
+            setCallEffect(newEvent)
         }, 1250)
     }
 
@@ -63,16 +75,7 @@ const UserPageHook = () => {
     const goToEdit = async (idEvent: number) => {
         navigate(`/user/${params.id}/${idEvent}`)
     }
-    useEffect(() => {
-        const callUserData = async () => {
-            if(data?.token && params.id) {
-                await dispatch(userData({id: params.id, token: data.token}))
-            }
-        }
-        dispatch(resetErrorState())
-
-        callUserData()
-    }, [])
+    
     
     if(!data?.token) {
         message = "Você foi desconectado. Por favor, faça login."
