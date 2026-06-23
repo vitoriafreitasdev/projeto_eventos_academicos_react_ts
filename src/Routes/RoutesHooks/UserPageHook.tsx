@@ -9,7 +9,7 @@ import {useSelector, useDispatch} from "react-redux";
 import {type EventToAdd, type deleteEvent} from "../../interfaces/interface";
 import { type RootState, type AppDispatch} from "../../redux/store";
 
-import {userData, addEvent, delEvent, addEventIdDeleted, resetErrorState} from "../../redux/slice/eventSlice";
+import {userData, addEvent, delEvent, addEventIdDeleted, resetErrorState, showRegisterUsers} from "../../redux/slice/eventSlice";
 
 const UserPageHook = () => {
     const params = useParams()
@@ -22,6 +22,7 @@ const UserPageHook = () => {
     const [date, setDate] = useState<string>("")
     const [user_Id] = useState<string | undefined>(params.id)
     const [key, setKey] = useState<string>("")
+    const [show, setShow] = useState<boolean>(false)
 
     const dispatch = useDispatch<AppDispatch>();
 
@@ -29,6 +30,8 @@ const UserPageHook = () => {
     const user = useSelector((state: RootState) => state.event.user)
     const loading = useSelector((state: RootState) => state.event.loading)
     const error = useSelector((state: RootState) => state.event.error) 
+    const usersRegistersInEvents = useSelector((state: RootState) => state.event.usersRegistersInEvents) 
+
 
     const addEventNew = async (e: { preventDefault: () => void; }) => {
         e.preventDefault()
@@ -74,6 +77,11 @@ const UserPageHook = () => {
     if(!data?.token) {
         message = "Você foi desconectado. Por favor, faça login."
     }
+
+    const callRegisterUsers = async (eventId: number) => {
+        await dispatch(showRegisterUsers(eventId))
+        setShow(true)
+    } 
     
     return {
         user, 
@@ -86,7 +94,11 @@ const UserPageHook = () => {
         loading, 
         error,
         deleteUserEvent,
-        goToEdit
+        goToEdit,
+        callRegisterUsers,
+        usersRegistersInEvents,
+        show,
+        setShow
     }
 
 }

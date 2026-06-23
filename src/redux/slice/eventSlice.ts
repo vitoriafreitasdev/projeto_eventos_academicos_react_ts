@@ -8,11 +8,10 @@ import get_user from "../../fetch_config/get_user";
 import post_event from "../../fetch_config/post_event";
 import put_event from "../../fetch_config/put_event";
 
-import { type Event, type EventToAdd, type UserLogin, type loginRes, type user, type deleteEvent, type EventEdit,  type certificadoData, type certificado, type registerEventData, type commentary, type commentPost, type commentPostRes} from "../../interfaces/interface";
+import { type Event, type EventToAdd, type UserLogin, type loginRes, type user, type deleteEvent, type EventEdit,  type certificadoData, type certificado, type registerEventData, type commentary, type commentPost, type commentPostRes, type usersRegistersInEvents} from "../../interfaces/interface";
 import delete_event from "../../fetch_config/delete_event";
 import certificado_data from "../../fetch_config/certificado_data";
 import registered_event from "../../fetch_config/registered_event";
-import get_comments from "../../fetch_config/get_comments";
 import post_comment from "../../fetch_config/post_comment";
 
 //import {events, user} from "../../mocked_data/data.ts"
@@ -99,17 +98,25 @@ export const registerToEvent = createAsyncThunk("registerToEvent", async (data: 
 //Comentários
 export const showComments = createAsyncThunk("showComments", async (eventId: number) => {
     try {
-        const res = await get_comments(`Site/comments/${eventId}`)
+        const res = await get_fetch(`Site/comments/${eventId}`)
         return res
     } catch (error) {
         throw new Error(" " + error)
     }
 })
-
 //Adicionar comentário
 export const addComments = createAsyncThunk("addComments", async (comment: commentPost) => {
     try {
         const res = await post_comment(`Site/addComment`, comment)
+        return res
+    } catch (error) {
+        throw new Error(" " + error)
+    }
+})
+//Pegar os usuários registrados nos eventos
+export const showRegisterUsers = createAsyncThunk("showRegisterUsers", async (eventId: number) => {
+    try {
+        const res = await get_fetch(`Site/registeredUsersInEvent/${eventId}`)
         return res
     } catch (error) {
         throw new Error(" " + error)
@@ -132,6 +139,7 @@ interface InicialState {
     showComment: boolean;
     lastCommentAdd: commentPostRes | null;
     errorComment: string | undefined | null;
+    usersRegistersInEvents: Array<usersRegistersInEvents> | null
 
 }
 // add o state dos comentarios aqui
@@ -150,7 +158,8 @@ export const initialState: InicialState = {
     commentary: null,
     showComment: false,
     lastCommentAdd: null,
-    errorComment: null
+    errorComment: null,
+    usersRegistersInEvents: null
 }
 
 const eventSlice = createSlice({
@@ -308,6 +317,23 @@ const eventSlice = createSlice({
         builder.addCase(addComments.rejected, (state, action) => {
             state.loading = false
             state.commentary = null
+            const error = action.error.message
+            const answerError = error?.split(/[""]/)
+            if(answerError != undefined) state.errorComment = answerError[1]
+        })
+        //Mostrar eventos registrados
+        builder.addCase(showRegisterUsers.pending, (state) => {
+            state.loading = true 
+            state.usersRegistersInEvents = null
+        })
+        builder.addCase(showRegisterUsers.fulfilled, (state, action) => {
+            state.usersRegistersInEvents = action.payload
+            state.loading = false
+        })
+        builder.addCase(showRegisterUsers.rejected, (state, action) => {
+            state.loading = false
+            state.commentary = null
+            state.usersRegistersInEvents = null
             const error = action.error.message
             const answerError = error?.split(/[""]/)
             if(answerError != undefined) state.errorComment = answerError[1]

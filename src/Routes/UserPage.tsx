@@ -3,7 +3,10 @@ import classes from "./UserPage.module.css"
 import {Link} from "react-router-dom";
 
 const UserPage = () => {
-  const {user, message, setTitle, setDescription, setDate, setKey, addEventNew, loading, error, deleteUserEvent, goToEdit} = UserPageHook()
+  const {user, message, setTitle, setDescription, setDate, setKey, addEventNew, loading, error, deleteUserEvent, goToEdit,
+        callRegisterUsers, usersRegistersInEvents, show, setShow} = UserPageHook()
+
+  console.log(usersRegistersInEvents)
 
   if(message){
     return (
@@ -31,19 +34,32 @@ const UserPage = () => {
           {
             const date = new Date(event.date).toLocaleDateString()
             return(
-                <div>
+                <div className={classes.userEventsContainerDiv}>
                   <h3>{event.title.toLocaleUpperCase()}</h3>
                   <p>Descrição: {event.description.toLocaleLowerCase()}</p>
                   <p>Data: {date}</p>
                   <p>Chave: {event.key}</p>
                   <button className={classes.edit} onClick={() => goToEdit(event.id)}>Editar</button>
                   <button className={classes.delete} onClick={() => deleteUserEvent(event.id)}>Excluir</button>
+                  <button className={classes.register} onClick={() => callRegisterUsers(event.id)}>Ver inscritos</button>
                 </div>
             )
           }
           )
         :
         <div className={classes.userEventsContainer}><h3>Não há eventos registrados</h3></div>}
+
+        {show && !loading && 
+        <div className={classes.userInEvent}>
+          <span onClick={() => setShow(false)}>X</span>
+          {usersRegistersInEvents ? usersRegistersInEvents.map((user) => (
+            <div >
+              <h3>{user.name}</h3>
+              <p>Email: {user.email}</p>
+              <p>Idade: {user.age}</p>
+            </div>
+          )) : <h2>0 usuários inscritos</h2>}
+        </div>}
         </div>
 
         <div>

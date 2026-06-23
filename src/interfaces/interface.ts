@@ -78,15 +78,16 @@ export interface commentPost{
     comment: string
 }
 
-/* retorno {
-  "id": 1018,
-  "commentary": "Daora",
-  "userId": 1015,
-  "eventId": 1
-}*/
 export interface commentPostRes{
     id: number,
     commentary: string,
     userId: number,
     eventId: number
+}
+
+export interface usersRegistersInEvents{
+    id: number,
+    name: string,
+    age: number,
+    email: string
 }
